@@ -54,7 +54,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
           <img 
             src={image} 
             alt={title} 
-            className="w-full h-44 object-cover object-top"
+            className="w-full h-48 object-cover"
+            loading="lazy"
           />
         </div>
       )}

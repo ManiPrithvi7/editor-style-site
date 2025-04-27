@@ -5,9 +5,11 @@ import { Home, User, Code, FolderOpen, Mail } from "lucide-react";
 
 interface SidebarProps {
   isOpen: boolean;
+  onNavigate: () => void;
 }
 
-const Sidebar = ({ isOpen }: SidebarProps) => {
+const Sidebar = ({ isOpen, onNavigate }: SidebarProps) => {
+  const [isExtended, setIsExtended] = useState(true);
   const navItems = [
     { path: "/", icon: <Home size={20} />, label: "Home", fileName: "home.jsx" },
     { path: "/about", icon: <User size={20} />, label: "About", fileName: "about.jsx" },
@@ -16,21 +18,27 @@ const Sidebar = ({ isOpen }: SidebarProps) => {
     { path: "/contact", icon: <Mail size={20} />, label: "Contact", fileName: "contact.jsx" },
   ];
 
+  const handleClick = () => {
+    onNavigate();
+  };
+
   return (
     <aside 
       className={`bg-vscode-sidebar fixed inset-y-0 left-0 z-40 w-64 transform transition-transform duration-300 md:relative ${
         isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0 md:w-16 lg:w-64"
       }`}
+      onMouseEnter={() => setIsExtended(true)}
+      onMouseLeave={() => !isOpen && setIsExtended(false)}
     >
       <div className="h-full flex flex-col">
         {/* Explorer header */}
         <div className="px-4 h-12 flex items-center border-b border-vscode-sidebar-active">
-          <span className={`text-sm uppercase font-medium ${!isOpen && "md:hidden lg:block"}`}>Explorer</span>
+          <span className={`text-sm uppercase font-medium ${!isExtended && "md:hidden lg:block"}`}>Explorer</span>
         </div>
         
         {/* Project name */}
         <div className="px-4 py-2 text-vscode-text/80 text-sm">
-          <div className={`${!isOpen && "md:hidden lg:block"}`}>PORTFOLIO</div>
+          <div className={`${!isExtended && "md:hidden lg:block"}`}>PORTFOLIO</div>
         </div>
         
         {/* Navigation */}
@@ -39,6 +47,7 @@ const Sidebar = ({ isOpen }: SidebarProps) => {
             <NavLink
               key={item.path}
               to={item.path}
+              onClick={handleClick}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-2 py-2 rounded-md transition-colors ${
                   isActive
@@ -48,7 +57,7 @@ const Sidebar = ({ isOpen }: SidebarProps) => {
               }
             >
               {item.icon}
-              <span className={`${!isOpen && "md:hidden lg:block"}`}>{item.fileName}</span>
+              <span className={`${!isExtended && "md:hidden lg:block"}`}>{item.fileName}</span>
             </NavLink>
           ))}
         </nav>
