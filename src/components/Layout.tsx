@@ -26,10 +26,12 @@ const Layout = ({ children }: LayoutProps) => {
         <Sidebar isOpen={sidebarOpen} onNavigate={closeSidebar} />
 
         {/* Main content */}
-        <div className="flex-1 transition-all duration-300 editor-content">
+        <div className="flex-1 transition-all duration-300">
           <button
             onClick={toggleSidebar}
-            className="fixed top-4 left-4 z-50 p-2 bg-vscode-sidebar-active rounded hover:bg-vscode-sidebar hover:text-vscode-accent transition-colors md:hidden"
+            className={`fixed top-4 left-4 z-50 p-2 bg-vscode-sidebar-active rounded hover:bg-vscode-sidebar hover:text-vscode-accent transition-colors md:hidden ${
+              sidebarOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'
+            }`}
             aria-label={sidebarOpen ? "Close sidebar" : "Open sidebar"}
           >
             {sidebarOpen ? <X size={20} /> : <Menu size={20} />}

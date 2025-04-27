@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { Home, User, Code, FolderOpen, Mail } from "lucide-react";
+import { Home, User, Code, FolderOpen, Mail, X } from "lucide-react";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -18,38 +18,51 @@ const Sidebar = ({ isOpen, onNavigate }: SidebarProps) => {
     { path: "/contact", icon: <Mail size={20} />, label: "Contact", fileName: "contact.jsx" },
   ];
 
-  const handleClick = () => {
-    onNavigate();
-  };
-
   return (
     <aside 
-      className={`bg-vscode-sidebar fixed inset-y-0 left-0 z-40 w-64 transform transition-transform duration-300 md:relative ${
-        isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0 md:w-16 lg:w-64"
-      }`}
+      className={`bg-vscode-sidebar fixed inset-y-0 left-0 z-40 transform transition-all duration-300 ease-in-out
+        ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+        ${isExtended ? "w-64" : "w-16"}
+        md:relative
+      `}
       onMouseEnter={() => setIsExtended(true)}
       onMouseLeave={() => !isOpen && setIsExtended(false)}
     >
       <div className="h-full flex flex-col">
+        {/* Mobile close button */}
+        <button
+          onClick={onNavigate}
+          className="md:hidden absolute top-4 right-4 p-2 hover:bg-vscode-sidebar-active rounded-md transition-colors"
+          aria-label="Close sidebar"
+        >
+          <X size={20} />
+        </button>
+
         {/* Explorer header */}
         <div className="px-4 h-12 flex items-center border-b border-vscode-sidebar-active">
-          <span className={`text-sm uppercase font-medium ${!isExtended && "md:hidden lg:block"}`}>Explorer</span>
+          <span className={`text-sm uppercase font-medium transition-opacity duration-200 ${
+            !isExtended && "md:opacity-0"
+          }`}>
+            Explorer
+          </span>
         </div>
         
         {/* Project name */}
         <div className="px-4 py-2 text-vscode-text/80 text-sm">
-          <div className={`${!isExtended && "md:hidden lg:block"}`}>PORTFOLIO</div>
+          <div className={`transition-opacity duration-200 ${!isExtended && "md:opacity-0"}`}>
+            PORTFOLIO
+          </div>
         </div>
         
         {/* Navigation */}
-        <nav className="flex-1 px-2 space-y-1">
+        <nav className="flex-1 px-2 space-y-2 py-4">
           {navItems.map((item) => (
             <NavLink
               key={item.path}
               to={item.path}
-              onClick={handleClick}
+              onClick={onNavigate}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-2 py-2 rounded-md transition-colors ${
+                `flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${
                   isActive
                     ? "bg-vscode-sidebar-active text-vscode-accent"
                     : "hover:bg-vscode-sidebar-active"
@@ -57,7 +70,9 @@ const Sidebar = ({ isOpen, onNavigate }: SidebarProps) => {
               }
             >
               {item.icon}
-              <span className={`${!isExtended && "md:hidden lg:block"}`}>{item.fileName}</span>
+              <span className={`transition-opacity duration-200 ${!isExtended && "md:opacity-0 md:w-0"}`}>
+                {item.fileName}
+              </span>
             </NavLink>
           ))}
         </nav>
